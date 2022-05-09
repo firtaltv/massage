@@ -1,7 +1,6 @@
 from rest_framework.generics import RetrieveUpdateAPIView, get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenViewBase
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 
 from .models import User
 from .serializers import UserSerializer, LoginSerializer
@@ -10,10 +9,8 @@ from .serializers import UserSerializer, LoginSerializer
 class UserProfileAPIView(RetrieveUpdateAPIView):
     http_method_names = [
         "get",
-        "post",
         "patch",
     ]
-    authentication_classes = (SessionAuthentication, BasicAuthentication,)
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)

@@ -25,15 +25,17 @@ class UserTest(APITestCase):
             "profile_photo": None
         }
 
-    def test_get_user_response_code(self):
+    def test_get_user(self):
         url = reverse('users:user_profile')
         self.client.force_login(user=self.admin_user)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-    def test_get_username(self):
-        url = reverse('users:user_profile')
-        self.client.force_login(user=self.admin_user)
-        response = self.client.get(url)
         content = json.loads(response.content)
         self.assertEqual(self.test_user['username'], content['username'])
+
+    def test_edit_user(self):
+        url = reverse('users:user_profile')
+        self.client.force_login(user=self.admin_user)
+        response = self.client.patch(url, {'first_name': 'Philip'})
+        content = json.loads(response.content)
+        self.assertEqual('Philip', content['first_name'])
