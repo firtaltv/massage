@@ -24,4 +24,3 @@ class UserProfileAPIView(RetrieveUpdateAPIView):
 
 class LoginAPIView(TokenViewBase):
     serializer_class = LoginSerializer
-    permission_classes = (AllowAny, )

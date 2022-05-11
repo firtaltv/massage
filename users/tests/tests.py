@@ -1,5 +1,3 @@
-import json
-
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
@@ -13,22 +11,23 @@ class UserTest(APITestCase):
         self.admin_user = User.objects.get(id=1)
 
     def test_get_user(self):
+        expected_data = {
+            "pk": 1,
+            "username": "admin",
+            "first_name": "",
+            "last_name": "",
+            "email": "admin@email.com",
+            "profile_photo": None
+        }
         url = reverse('users:user_profile')
         self.client.force_login(user=self.admin_user)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        content = response.data
-        print(content)
-        self.assertEqual(self.admin_user.username, content['username'])
-        self.assertEqual(self.admin_user.first_name, content['first_name'])
-        self.assertEqual(self.admin_user.last_name, content['last_name'])
-        self.assertEqual(self.admin_user.email, content['email'])
-        self.assertEqual(self.admin_user.profile_photo, content['profile_photo'])
+        self.assertDictEqual(response.data, expected_data)
 
     def test_edit_user(self):
         url = reverse('users:user_profile')
         self.client.force_login(user=self.admin_user)
         response = self.client.patch(url, {'first_name': 'Philip', 'email': 'admin1@email.com'})
-        content = response.data
-        self.assertEqual('Philip', content['first_name'])
-        self.assertEqual(self.admin_user.email, content['email'])
+        self.assertEqual(response.data['first_name'], 'Philip')
+        self.assertEqual(response.data['email'], self.admin_user.email)
