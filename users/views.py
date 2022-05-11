@@ -8,8 +8,8 @@ from .serializers import UserSerializer, LoginSerializer
 
 class UserProfileAPIView(RetrieveUpdateAPIView):
     http_method_names = [
-        "get",
-        "patch",
+        'get',
+        'patch',
     ]
     queryset = User.objects.all()
     serializer_class = UserSerializer

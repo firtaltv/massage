@@ -11,15 +11,15 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = (
-            "username",
-            "first_name",
-            "last_name",
-            "email",
-            "profile_photo",
+            'username',
+            'first_name',
+            'last_name',
+            'email',
+            'profile_photo',
         )
         read_only_fields = (
-            "username",
-            "email",
+            'username',
+            'email',
         )
 
 
@@ -28,4 +28,4 @@ class LoginSerializer(TokenObtainPairSerializer):
     password = PasswordField(write_only=True)
 
     class Meta:
-        fields = ("password",)
+        fields = ('password',)

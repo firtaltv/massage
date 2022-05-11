@@ -11,41 +11,41 @@ class CustomUserAdmin(UserAdmin):
         (
             None,
             {
-                "fields": (
-                    "username",
-                    "password",
+                'fields': (
+                    'username',
+                    'password',
                 )
             },
         ),
         (
-            _("Personal info"),
+            _('Personal info'),
             {
-                "fields": (
-                    "first_name",
-                    "last_name",
-                    "email",
-                    "profile_photo",
+                'fields': (
+                    'first_name',
+                    'last_name',
+                    'email',
+                    'profile_photo',
                 )
             },
         ),
         (
-            _("Permissions"),
+            _('Permissions'),
             {
-                "fields": (
-                    "is_active",
-                    "is_staff",
-                    "is_superuser",
-                    "groups",
-                    "user_permissions",
+                'fields': (
+                    'is_active',
+                    'is_staff',
+                    'is_superuser',
+                    'groups',
+                    'user_permissions',
                 ),
             },
         ),
         (
-            _("Important dates"),
+            _('Important dates'),
             {
-                "fields": (
-                    "last_login",
-                    "date_joined",
+                'fields': (
+                    'last_login',
+                    'date_joined',
                 )
             },
         ),
