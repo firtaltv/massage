@@ -5,5 +5,5 @@ app_name = 'users'
 
 urlpatterns = [
     path('', UserProfileAPIView.as_view(), name='user_profile'),
-    path("login/", LoginAPIView.as_view(), name="login"),
+    path('login/', LoginAPIView.as_view(), name='login'),
 ]
