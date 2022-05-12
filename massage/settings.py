@@ -167,7 +167,12 @@ AUTH_USER_MODEL = 'users.User'
 
 SITE_ID = 1
 
-LOGIN_URL = '/users/login/'
-LOGOUT_URL = 'logout/'
+LOGIN_REDIRECT_URL = '/'
+
+SWAGGER_SETTINGS = {
+    'LOGIN_URL': '/auth/login/',
+    'USE_SESSION_AUTH': True,
+    'LOGOUT_URL': '/logout/'
+}
 
 USE_SESSION_AUTH = True
