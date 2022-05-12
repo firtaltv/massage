@@ -1,8 +1,4 @@
 from rest_framework import serializers
-from rest_framework_simplejwt.serializers import (
-    TokenObtainPairSerializer,
-    PasswordField,
-)
 
 from .models import User
 
@@ -22,11 +18,3 @@ class UserSerializer(serializers.ModelSerializer):
             'username',
             'email',
         )
-
-
-class LoginSerializer(TokenObtainPairSerializer):
-
-    password = PasswordField(write_only=True)
-
-    class Meta:
-        fields = ('password',)

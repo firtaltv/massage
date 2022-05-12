@@ -12,5 +12,6 @@ urlpatterns = [
     path('users/', include('users.urls')),
     path('accounts/', include('allauth.urls')),
     path('swagger/', schema),
+    path('auth/', include('rest_framework.urls'), name='rest_framework'),
     path('logout/', LogoutView.as_view(), name='logout')
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

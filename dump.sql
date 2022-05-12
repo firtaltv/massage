@@ -763,6 +763,7 @@ COPY public.account_emailconfirmation (id, created, sent, key, email_address_id)
 --
 
 COPY public.auth_group (id, name) FROM stdin;
+1	HR
 \.
 
 
@@ -851,6 +852,9 @@ COPY public.authtoken_token (key, created, user_id) FROM stdin;
 --
 
 COPY public.django_admin_log (id, action_time, object_id, object_repr, action_flag, change_message, content_type_id, user_id) FROM stdin;
+1	2022-05-09 15:56:10.453492+00	2	philip	1	[{"added": {}}]	14	1
+2	2022-05-09 15:57:20.559812+00	2	philip	2	[{"changed": {"fields": ["Staff status"]}}]	14	1
+3	2022-05-11 14:51:12.749915+00	1	HR	1	[{"added": {}}]	3	1
 \.
 
 
@@ -920,6 +924,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 
 COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
 08hf1y58zg2i3m2emjp0a31l13ctlis9	.eJxVjDkOwjAUBe_iGlmObWKbkj5niP6KAyiRslSIu0OkFNC-mXkv08O21n5bZO4HNhfTmNPvhkAPGXfAdxhvk6VpXOcB7a7Ygy62m1ie18P9O6iw1G8NzqVEiOSakMXHSIERig9Ogz8LU0FpY-Ssom0CLJlK1qKhZfCKat4f9p04-w:1nl5mc:3rEOlkuYpkJgb-ofLBYrj4IToaDaxMOFiVd2F62wv3Q	2022-05-15 09:22:26.926329+00
+gbpc2o2a35metwsvoki2c21qlax5umu0	.eJxVjDkOwjAUBe_iGlmObWKbkj5niP6KAyiRslSIu0OkFNC-mXkv08O21n5bZO4HNhfTmNPvhkAPGXfAdxhvk6VpXOcB7a7Ygy62m1ie18P9O6iw1G8NzqVEiOSakMXHSIERig9Ogz8LU0FpY-Ssom0CLJlK1qKhZfCKat4f9p04-w:1np6vI:EALO_heYrnYYatqi3frObMS2XgsGyMB817AEYxuToM8	2022-05-26 11:24:00.682622+00
 \.
 
 
@@ -969,7 +974,8 @@ COPY public.socialaccount_socialtoken (id, token, token_secret, expires_at, acco
 --
 
 COPY public.users_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined, profile_photo) FROM stdin;
-1	pbkdf2_sha256$320000$zChYapqPL2yP7cynuxLgZu$kaOSUfTwQnJnEFBsjMt/kxUyz/HNR27DbRSZh+8J08Y=	2022-05-01 09:22:26.906006+00	t	admin			admin@email.com	t	t	2022-05-01 09:11:43.922664+00	
+2	pbkdf2_sha256$320000$4wTATIoHGIq5nRxabkCUfp$EKZhlmGb8+hKPftk55dDud4yppn0LHBRla9AGIGrMNc=	2022-05-09 15:57:32.677174+00	f	philip				t	t	2022-05-09 15:56:10+00	1
+1	pbkdf2_sha256$320000$zChYapqPL2yP7cynuxLgZu$kaOSUfTwQnJnEFBsjMt/kxUyz/HNR27DbRSZh+8J08Y=	2022-05-12 11:24:00.662521+00	t	admin	Philip	1	admin@email.com	t	t	2022-05-01 09:11:43.922664+00	
 \.
 
 
@@ -1007,7 +1013,7 @@ SELECT pg_catalog.setval('public.account_emailconfirmation_id_seq', 1, false);
 -- Name: auth_group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.auth_group_id_seq', 1, false);
+SELECT pg_catalog.setval('public.auth_group_id_seq', 1, true);
 
 
 --
@@ -1028,7 +1034,7 @@ SELECT pg_catalog.setval('public.auth_permission_id_seq', 56, true);
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 1, false);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 3, true);
 
 
 --
@@ -1091,7 +1097,7 @@ SELECT pg_catalog.setval('public.users_user_groups_id_seq', 1, false);
 -- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.users_user_id_seq', 1, true);
+SELECT pg_catalog.setval('public.users_user_id_seq', 2, true);
 
 
 --
