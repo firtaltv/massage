@@ -1,20 +1,31 @@
 from django.db import models
 from users.models import User
-
-MASSAGE_STATUSES = [
-    ('TBD', 'To be Done'),
-    ('IP', 'In Progress'),
-    ('DN', 'Done'),
-]
+from django.utils.translation import gettext_lazy as _
 
 
 class Massage(models.Model):
-    therapist_id = models.ForeignKey(User, null=False, related_name='Therapist', on_delete=models.CASCADE)
-    client_id = models.ForeignKey(User, null=False, related_name='Client', on_delete=models.CASCADE)
+    class Status(models.TextChoices):
+        TBD = 'TBD', _('To be Done')
+        IP = 'IP', _('In Progress')
+        DN = 'DN', _('Done')
+
+    therapist = models.ForeignKey(
+        User, related_name='therapist', on_delete=models.CASCADE
+    )
+    client = models.ForeignKey(
+        User, related_name='client', on_delete=models.CASCADE
+    )
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
+
     status = models.CharField(
         max_length=10,
-        choices=MASSAGE_STATUSES,
-        default='TBD',
+        choices=Status.choices,
+        default=Status.TBD,
     )
+
+    def __str__(self):
+        return f"Ther: {self.therapist.first_name} " \
+               f"| Cli: {self.client.first_name} | " \
+               f"{self.start_time.strftime('%d %b %Y, from %H:%M')} " \
+               f"to {self.end_time.strftime('%H:%M')}"

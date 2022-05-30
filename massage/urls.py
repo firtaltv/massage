@@ -10,6 +10,7 @@ schema = get_swagger_view(title='Massage')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
+    path('massage/', include('service.urls')),
     path('swagger/', schema),
     path('auth/', include('rest_framework.urls'), name='rest_framework'),
     path('logout/', LogoutView.as_view(), name='logout')

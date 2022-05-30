@@ -4,10 +4,12 @@ from .models import Massage
 
 @admin.register(Massage)
 class MassageAdmin(admin.ModelAdmin):
-    readonly_fields = (
-        'therapist_id',
-        'client_id',
-        'start_time',
-        'end_time',
-        'status',
-    )
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False

@@ -1,0 +1,58 @@
+[
+    {
+        "model": "users.User",
+        "pk": "1",
+        "fields": {
+            "password": "pbkdf2_sha256$320000$zChYapqPL2yP7cynuxLgZu$kaOSUfTwQnJnEFBsjMt/kxUyz/HNR27DbRSZh+8J08Y=",
+            "last_login": "2022-05-06 21:36:33.090145 +00:00",
+            "is_superuser": "True",
+            "username": "admin",
+            "first_name": "Admin",
+            "last_name": "Super",
+            "email": "admin@email.com",
+            "is_staff": "True",
+            "is_active": "True",
+            "date_joined": "2022-05-01 09:11:43.922664 +00:00",
+            "profile_photo": null
+        }
+    },
+    {
+        "model": "users.User",
+        "pk": "2",
+        "fields": {
+            "password": "pbkdf2_sha256$320000$BFtwdY7tVit9PY8TG3nbqk$hIAP3NGpuQNY+KTxmRuS+ineju2vzY0x4/1JMdwgSms=",
+            "last_login": "2022-05-06 21:36:33.090145 +00:00",
+            "is_superuser": "False",
+            "username": "philip",
+            "first_name": "Philippp",
+            "last_name": "Stoika",
+            "email": "",
+            "is_staff": "False",
+            "is_active": "True",
+            "date_joined": "2022-05-21 15:39:55.000000 +00:00",
+            "profile_photo": null
+        }
+    },
+    {
+        "model": "service.Massage",
+        "pk": "1",
+        "fields": {
+            "therapist": "1",
+            "client": "2",
+            "start_time": "2022-05-27T15:19:52Z",
+            "end_time": "2022-05-27T16:19:52Z",
+            "status": "TBD"
+        }
+    },
+    {
+        "model": "service.Massage",
+        "pk": "2",
+        "fields": {
+            "therapist": "2",
+            "client": "1",
+            "start_time": "2022-05-27T16:19:52Z",
+            "end_time": "2022-05-27T17:19:52Z",
+            "status": "TBD"
+        }
+    }
+]

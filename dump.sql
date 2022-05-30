@@ -297,6 +297,43 @@ ALTER SEQUENCE public.django_site_id_seq OWNED BY public.django_site.id;
 
 
 --
+-- Name: service_massage; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.service_massage (
+    id bigint NOT NULL,
+    start_time timestamp with time zone NOT NULL,
+    end_time timestamp with time zone NOT NULL,
+    status character varying(10) NOT NULL,
+    client_id bigint NOT NULL,
+    therapist_id bigint NOT NULL
+);
+
+
+ALTER TABLE public.service_massage OWNER TO postgres;
+
+--
+-- Name: service_massage_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.service_massage_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.service_massage_id_seq OWNER TO postgres;
+
+--
+-- Name: service_massage_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.service_massage_id_seq OWNED BY public.service_massage.id;
+
+
+--
 -- Name: users_user; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -457,6 +494,13 @@ ALTER TABLE ONLY public.django_site ALTER COLUMN id SET DEFAULT nextval('public.
 
 
 --
+-- Name: service_massage id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.service_massage ALTER COLUMN id SET DEFAULT nextval('public.service_massage_id_seq'::regclass);
+
+
+--
 -- Name: users_user id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -534,6 +578,10 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 34	Can change user	9	change_user
 35	Can delete user	9	delete_user
 36	Can view user	9	view_user
+37	Can add massage	10	add_massage
+38	Can change massage	10	change_massage
+39	Can delete massage	10	delete_massage
+40	Can view massage	10	view_massage
 \.
 
 
@@ -551,6 +599,10 @@ COPY public.authtoken_token (key, created, user_id) FROM stdin;
 
 COPY public.django_admin_log (id, action_time, object_id, object_repr, action_flag, change_message, content_type_id, user_id) FROM stdin;
 1	2022-05-21 15:39:55.570613+00	2	philip	1	[{"added": {}}]	9	1
+2	2022-05-27 15:19:59.209218+00	1	philip admin 2022-05-27 15:19:52+00:00 2022-05-27 16:19:54+00:00	1	[{"added": {}}]	10	1
+3	2022-05-27 15:21:24.304816+00	1	admin	2	[{"changed": {"fields": ["First name", "Last name"]}}]	9	1
+4	2022-05-27 15:21:33.185725+00	2	philip	2	[{"changed": {"fields": ["First name", "Last name"]}}]	9	1
+5	2022-05-28 17:19:06.991881+00	2	Ther: Admin | Cli: Philip | 28 May 2022, from 17:19 to 18:19	1	[{"added": {}}]	10	1
 \.
 
 
@@ -568,6 +620,7 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 7	authtoken	token
 8	authtoken	tokenproxy
 9	users	user
+10	service	massage
 \.
 
 
@@ -600,6 +653,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 22	sessions	0001_initial	2022-05-21 15:37:58.22392+00
 23	sites	0001_initial	2022-05-21 15:37:58.226279+00
 24	sites	0002_alter_domain_unique	2022-05-21 15:37:58.230628+00
+25	service	0001_initial	2022-05-27 15:19:30.746569+00
 \.
 
 
@@ -609,6 +663,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 
 COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
 u5uxg812ijrhaxzcm4wo2gfxmgtzuc6f	.eJxVjM0OwiAQhN-FsyG1y_Lj0bvPQFgWpGpoUtqT8d0V04OeJpnvm3kKH7a1-K2lxU8sTuIoDr8dhXhPtQO-hXqdZZzrukwkuyJ32uRl5vQ47-7fQQmtfNbZRSCTdEBtXQY1WmuAQfeMbvxGRFSGEFklIlQZEvFAGQYNWbzezhE3mA:1nsRBy:R64yCMGy9-NKJCdNd8XrekvLFaCtcTNQQULV9R-oNww	2022-06-04 15:38:58.482234+00
+2kk8gmqzb334gqrkqi7ibyfkujec0a3c	.eJxVjM0OwiAQhN-FsyG1y_Lj0bvPQFgWpGpoUtqT8d0V04OeJpnvm3kKH7a1-K2lxU8sTuIoDr8dhXhPtQO-hXqdZZzrukwkuyJ32uRl5vQ47-7fQQmtfNbZRSCTdEBtXQY1WmuAQfeMbvxGRFSGEFklIlQZEvFAGQYNWbzezhE3mA:1nubkc:r815lYnomahUB1Crzx4UAtj5UN8DKkDt6QhiaMKdIL0	2022-06-10 15:19:42.236914+00
 \.
 
 
@@ -622,12 +677,22 @@ COPY public.django_site (id, domain, name) FROM stdin;
 
 
 --
+-- Data for Name: service_massage; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.service_massage (id, start_time, end_time, status, client_id, therapist_id) FROM stdin;
+1	2022-05-27 15:19:52+00	2022-05-27 16:19:54+00	TBD	1	2
+2	2022-05-28 17:19:00+00	2022-05-28 18:19:02+00	TBD	2	1
+\.
+
+
+--
 -- Data for Name: users_user; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
 COPY public.users_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined, profile_photo) FROM stdin;
-1	pbkdf2_sha256$320000$2v6ijadub1YophBJUOUjUg$I1LatSk9N9r5PqLfYJss41TsykvmiN700LWeiqFdNNo=	2022-05-21 15:38:58.480372+00	t	admin			admin@mail.com	t	t	2022-05-21 15:38:53.203016+00	
-2	pbkdf2_sha256$320000$BFtwdY7tVit9PY8TG3nbqk$hIAP3NGpuQNY+KTxmRuS+ineju2vzY0x4/1JMdwgSms=	\N	f	philip				f	t	2022-05-21 15:39:55.457052+00	
+1	pbkdf2_sha256$320000$2v6ijadub1YophBJUOUjUg$I1LatSk9N9r5PqLfYJss41TsykvmiN700LWeiqFdNNo=	2022-05-27 15:19:42+00	t	admin	Admin	Super	admin@mail.com	t	t	2022-05-21 15:38:53+00	
+2	pbkdf2_sha256$320000$BFtwdY7tVit9PY8TG3nbqk$hIAP3NGpuQNY+KTxmRuS+ineju2vzY0x4/1JMdwgSms=	\N	f	philip	Philip	Stoika		f	t	2022-05-21 15:39:55+00	
 \.
 
 
@@ -665,28 +730,28 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 1, false);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 36, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 40, true);
 
 
 --
 -- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.django_admin_log_id_seq', 1, true);
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 5, true);
 
 
 --
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 9, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 10, true);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 24, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 25, true);
 
 
 --
@@ -694,6 +759,13 @@ SELECT pg_catalog.setval('public.django_migrations_id_seq', 24, true);
 --
 
 SELECT pg_catalog.setval('public.django_site_id_seq', 1, true);
+
+
+--
+-- Name: service_massage_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.service_massage_id_seq', 2, true);
 
 
 --
@@ -838,6 +910,14 @@ ALTER TABLE ONLY public.django_site
 
 
 --
+-- Name: service_massage service_massage_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.service_massage
+    ADD CONSTRAINT service_massage_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: users_user_groups users_user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -956,6 +1036,20 @@ CREATE INDEX django_site_domain_a2e37b91_like ON public.django_site USING btree 
 
 
 --
+-- Name: service_massage_client_id_e6764fb1; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX service_massage_client_id_e6764fb1 ON public.service_massage USING btree (client_id);
+
+
+--
+-- Name: service_massage_therapist_id_3171db9a; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX service_massage_therapist_id_3171db9a ON public.service_massage USING btree (therapist_id);
+
+
+--
 -- Name: users_user_groups_group_id_9afc8d0e; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -1036,6 +1130,22 @@ ALTER TABLE ONLY public.django_admin_log
 
 ALTER TABLE ONLY public.django_admin_log
     ADD CONSTRAINT django_admin_log_user_id_c564eba6_fk_users_user_id FOREIGN KEY (user_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: service_massage service_massage_client_id_e6764fb1_fk_users_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.service_massage
+    ADD CONSTRAINT service_massage_client_id_e6764fb1_fk_users_user_id FOREIGN KEY (client_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: service_massage service_massage_therapist_id_3171db9a_fk_users_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.service_massage
+    ADD CONSTRAINT service_massage_therapist_id_3171db9a_fk_users_user_id FOREIGN KEY (therapist_id) REFERENCES public.users_user(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --
