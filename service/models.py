@@ -25,7 +25,7 @@ class Massage(models.Model):
     )
 
     def __str__(self):
-        return f"Ther: {self.therapist.first_name} " \
-               f"| Cli: {self.client.first_name} | " \
+        return f"Therapist: {self.therapist.get_full_name()} " \
+               f"| Client: {self.client.get_full_name()} | " \
                f"{self.start_time.strftime('%d %b %Y, from %H:%M')} " \
                f"to {self.end_time.strftime('%H:%M')}"
