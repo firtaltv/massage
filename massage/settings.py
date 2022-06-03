@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
 
 
     'rest_framework',
@@ -47,12 +46,9 @@ INSTALLED_APPS = [
     'rest_auth.registration',
 
 
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
     'rest_framework_swagger',
     'users',
+    'service',
 
 ]
 
