@@ -59,7 +59,6 @@ class UserTest(APITestCase):
         url = reverse('service:therapist_massage_list')
         self.client.force_login(user=self.user_1)
         response = self.client.get(url)
-        print(dict(response.data[0]))
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
         self.assertDictEqual(dict(response.data[0]), expected_data)
