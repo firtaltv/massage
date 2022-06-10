@@ -214,6 +214,78 @@ ALTER SEQUENCE public.django_content_type_id_seq OWNED BY public.django_content_
 
 
 --
+-- Name: django_cron_cronjoblock; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_cron_cronjoblock (
+    id bigint NOT NULL,
+    job_name character varying(200) NOT NULL,
+    locked boolean NOT NULL
+);
+
+
+ALTER TABLE public.django_cron_cronjoblock OWNER TO postgres;
+
+--
+-- Name: django_cron_cronjoblock_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.django_cron_cronjoblock_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_cron_cronjoblock_id_seq OWNER TO postgres;
+
+--
+-- Name: django_cron_cronjoblock_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.django_cron_cronjoblock_id_seq OWNED BY public.django_cron_cronjoblock.id;
+
+
+--
+-- Name: django_cron_cronjoblog; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_cron_cronjoblog (
+    id bigint NOT NULL,
+    code character varying(64) NOT NULL,
+    start_time timestamp with time zone NOT NULL,
+    end_time timestamp with time zone NOT NULL,
+    is_success boolean NOT NULL,
+    message text NOT NULL,
+    ran_at_time time without time zone
+);
+
+
+ALTER TABLE public.django_cron_cronjoblog OWNER TO postgres;
+
+--
+-- Name: django_cron_cronjoblog_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.django_cron_cronjoblog_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.django_cron_cronjoblog_id_seq OWNER TO postgres;
+
+--
+-- Name: django_cron_cronjoblog_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.django_cron_cronjoblog_id_seq OWNED BY public.django_cron_cronjoblog.id;
+
+
+--
 -- Name: django_migrations; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -480,6 +552,20 @@ ALTER TABLE ONLY public.django_content_type ALTER COLUMN id SET DEFAULT nextval(
 
 
 --
+-- Name: django_cron_cronjoblock id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_cron_cronjoblock ALTER COLUMN id SET DEFAULT nextval('public.django_cron_cronjoblock_id_seq'::regclass);
+
+
+--
+-- Name: django_cron_cronjoblog id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_cron_cronjoblog ALTER COLUMN id SET DEFAULT nextval('public.django_cron_cronjoblog_id_seq'::regclass);
+
+
+--
 -- Name: django_migrations id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -582,6 +668,14 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 38	Can change massage	10	change_massage
 39	Can delete massage	10	delete_massage
 40	Can view massage	10	view_massage
+41	Can add cron job log	11	add_cronjoblog
+42	Can change cron job log	11	change_cronjoblog
+43	Can delete cron job log	11	delete_cronjoblog
+44	Can view cron job log	11	view_cronjoblog
+45	Can add cron job lock	12	add_cronjoblock
+46	Can change cron job lock	12	change_cronjoblock
+47	Can delete cron job lock	12	delete_cronjoblock
+48	Can view cron job lock	12	view_cronjoblock
 \.
 
 
@@ -621,6 +715,24 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 8	authtoken	tokenproxy
 9	users	user
 10	service	massage
+11	django_cron	cronjoblog
+12	django_cron	cronjoblock
+\.
+
+
+--
+-- Data for Name: django_cron_cronjoblock; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_cron_cronjoblock (id, job_name, locked) FROM stdin;
+\.
+
+
+--
+-- Data for Name: django_cron_cronjoblog; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_cron_cronjoblog (id, code, start_time, end_time, is_success, message, ran_at_time) FROM stdin;
 \.
 
 
@@ -654,6 +766,10 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 23	sites	0001_initial	2022-05-21 15:37:58.226279+00
 24	sites	0002_alter_domain_unique	2022-05-21 15:37:58.230628+00
 25	service	0001_initial	2022-05-27 15:19:30.746569+00
+26	django_cron	0001_initial	2022-06-07 15:42:13.01745+00
+27	django_cron	0002_remove_max_length_from_CronJobLog_message	2022-06-07 15:42:13.019293+00
+28	django_cron	0003_cronjoblock	2022-06-07 15:42:13.028152+00
+29	django_cron	0004_alter_cronjoblock_id_alter_cronjoblog_id	2022-06-07 15:42:13.045869+00
 \.
 
 
@@ -730,7 +846,7 @@ SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 1, false);
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 40, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 48, true);
 
 
 --
@@ -744,14 +860,28 @@ SELECT pg_catalog.setval('public.django_admin_log_id_seq', 5, true);
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 10, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 12, true);
+
+
+--
+-- Name: django_cron_cronjoblock_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.django_cron_cronjoblock_id_seq', 1, false);
+
+
+--
+-- Name: django_cron_cronjoblog_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.django_cron_cronjoblog_id_seq', 1, false);
 
 
 --
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 25, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 29, true);
 
 
 --
@@ -875,6 +1005,30 @@ ALTER TABLE ONLY public.django_content_type
 
 ALTER TABLE ONLY public.django_content_type
     ADD CONSTRAINT django_content_type_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_cron_cronjoblock django_cron_cronjoblock_job_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_cron_cronjoblock
+    ADD CONSTRAINT django_cron_cronjoblock_job_name_key UNIQUE (job_name);
+
+
+--
+-- Name: django_cron_cronjoblock django_cron_cronjoblock_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_cron_cronjoblock
+    ADD CONSTRAINT django_cron_cronjoblock_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_cron_cronjoblog django_cron_cronjoblog_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_cron_cronjoblog
+    ADD CONSTRAINT django_cron_cronjoblog_pkey PRIMARY KEY (id);
 
 
 --
@@ -1012,6 +1166,69 @@ CREATE INDEX django_admin_log_content_type_id_c4bce8eb ON public.django_admin_lo
 --
 
 CREATE INDEX django_admin_log_user_id_c564eba6 ON public.django_admin_log USING btree (user_id);
+
+
+--
+-- Name: django_cron_cronjoblock_job_name_fb6ce879_like; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_cron_cronjoblock_job_name_fb6ce879_like ON public.django_cron_cronjoblock USING btree (job_name varchar_pattern_ops);
+
+
+--
+-- Name: django_cron_cronjoblog_code_48865653; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_cron_cronjoblog_code_48865653 ON public.django_cron_cronjoblog USING btree (code);
+
+
+--
+-- Name: django_cron_cronjoblog_code_48865653_like; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_cron_cronjoblog_code_48865653_like ON public.django_cron_cronjoblog USING btree (code varchar_pattern_ops);
+
+
+--
+-- Name: django_cron_cronjoblog_code_is_success_ran_at_time_84da9606_idx; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_cron_cronjoblog_code_is_success_ran_at_time_84da9606_idx ON public.django_cron_cronjoblog USING btree (code, is_success, ran_at_time);
+
+
+--
+-- Name: django_cron_cronjoblog_code_start_time_4fc78f9d_idx; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_cron_cronjoblog_code_start_time_4fc78f9d_idx ON public.django_cron_cronjoblog USING btree (code, start_time);
+
+
+--
+-- Name: django_cron_cronjoblog_code_start_time_ran_at_time_8b50b8fa_idx; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_cron_cronjoblog_code_start_time_ran_at_time_8b50b8fa_idx ON public.django_cron_cronjoblog USING btree (code, start_time, ran_at_time);
+
+
+--
+-- Name: django_cron_cronjoblog_end_time_7918602a; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_cron_cronjoblog_end_time_7918602a ON public.django_cron_cronjoblog USING btree (end_time);
+
+
+--
+-- Name: django_cron_cronjoblog_ran_at_time_7fed2751; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_cron_cronjoblog_ran_at_time_7fed2751 ON public.django_cron_cronjoblog USING btree (ran_at_time);
+
+
+--
+-- Name: django_cron_cronjoblog_start_time_d68c0dd9; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_cron_cronjoblog_start_time_d68c0dd9 ON public.django_cron_cronjoblog USING btree (start_time);
 
 
 --
