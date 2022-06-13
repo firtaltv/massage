@@ -1,5 +1,5 @@
 from datetime import datetime
-from .models import Massage, Slot, Schedule
+from .models import Massage
 from django_cron import CronJobBase, Schedule
 import pytz
 
@@ -16,19 +16,16 @@ class SetStatusJob(CronJobBase):
 
     @staticmethod
     def set():
-        qs = Massage.objects.all()
-        for obj in qs:
-            if obj.status == 'TBD':
-                if obj.start_time < utc.localize(datetime.now()) < obj.end_time:
-                    obj.status = 'IP'
-                    obj.save()
-                elif obj.end_time < utc.localize(datetime.now()):
-                    obj.status = 'DN'
-                    obj.save()
-            if obj.status == 'IP':
-                if obj.end_time < utc.localize(datetime.now()):
-                    obj.status = 'DN'
-                    obj.save()
+        qs = Massage.objects.filter(
+            status='TBD',
+            start_time__lt=utc.localize(datetime.now())
+        ).update(status='IP')
+        qsip = Massage.objects.filter(
+            status="IP",
+            end_time__lt=utc.localize(datetime.now())
+        ).update(status='DN')
+        Massage.objects.bulk_update(qs, update_fields=["status"])
+        Massage.objects.bulk_update(qsip, update_fields=["status"])
 
     def do(self):
         self.set()
