@@ -16,16 +16,16 @@ class SetStatusJob(CronJobBase):
 
     @staticmethod
     def set():
-        qs = Massage.objects.filter(
-            status='TBD',
-            start_time__lt=utc.localize(datetime.now())
-        ).update(status='IP')
-        qsip = Massage.objects.filter(
-            status="IP",
+        Massage.objects.exclude(status=Massage.Status.TODO).filter(
+            start_time__gt=utc.localize(datetime.now())
+        ).update(status=Massage.Status.TODO)
+        Massage.objects.exclude(status=Massage.Status.INPROG).filter(
+            start_time__lt=utc.localize(datetime.now()),
+            end_time__gt=utc.localize(datetime.now())
+        ).update(status=Massage.Status.INPROG)
+        Massage.objects.exclude(status=Massage.Status.DONE).filter(
             end_time__lt=utc.localize(datetime.now())
-        ).update(status='DN')
-        Massage.objects.bulk_update(qs, update_fields=["status"])
-        Massage.objects.bulk_update(qsip, update_fields=["status"])
+        ).update(status=Massage.Status.DONE)
 
     def do(self):
         self.set()
