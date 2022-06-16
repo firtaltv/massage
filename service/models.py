@@ -23,9 +23,3 @@ class Massage(models.Model):
         choices=Status.choices,
         default=Status.TBD,
     )
-
-    def __str__(self):
-        return f"Therapist: {self.therapist.get_full_name()} " \
-               f"| Client: {self.client.get_full_name()} | " \
-               f"{self.start_time.strftime('%d %b %Y, from %H:%M')} " \
-               f"to {self.end_time.strftime('%H:%M')}"
