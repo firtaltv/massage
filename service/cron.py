@@ -1,5 +1,5 @@
 from datetime import datetime
-from .models import Massage, Slot, Schedule as Sch
+from .models import Massage, Schedule as Sch
 from django_cron import CronJobBase, Schedule
 import pytz
 

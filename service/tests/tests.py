@@ -87,4 +87,5 @@ class ScheduleTest(APITestCase):
         self.client.force_login(user=self.user_1)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 5)
         self.assertDictEqual(dict(response.data), expected_data)

@@ -24,7 +24,7 @@ class TherapistMassageListAPIView(ListAPIView):
         return super().get_queryset().filter(therapist=self.request.user)
 
 
-class TherapistScheduleListAPIView(RetrieveAPIView):
+class TherapistScheduleAPIView(RetrieveAPIView):
     """ Get schedule for any Therapist """
     queryset = Schedule.objects.all()
     serializer_class = ScheduleSerializer

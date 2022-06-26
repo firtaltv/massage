@@ -178,5 +178,5 @@ USE_SESSION_AUTH = True
 
 CRON_CLASSES = [
     'service.cron.SetStatusJob',
-    'service.cron.AddSlotsWeekly'
+    'service.cron.AddSlotsWeekly',
 ]
