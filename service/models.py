@@ -1,12 +1,15 @@
+from datetime import datetime, timedelta
+
+import pytz
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django.forms import MultipleChoiceField
-from users.models import User
 from django.utils.translation import gettext_lazy as _
-from django.contrib.postgres.fields import ArrayField
-from datetime import datetime, timedelta
-import pytz
+
+from users.models import User
 
 utc = pytz.UTC
+
 
 class Massage(models.Model):
     class Status(models.TextChoices):
@@ -32,6 +35,7 @@ class Massage(models.Model):
 
 class ChoiceArrayField(ArrayField):
     """ Helper for multiple choice field """
+
     def formfield(self, **kwargs):
         defaults = {
             'form_class': MultipleChoiceField,
@@ -51,53 +55,73 @@ class Schedule(models.Model):
         Friday = 4, _('Friday'),
         Saturday = 5, _('Saturday'),
         Sunday = 6, _('Sunday'),
+
     days = ChoiceArrayField(
         base_field=models.CharField(max_length=10, choices=Week.choices),
         default=list,
         size=10,
         blank=True,
     )
-
-    weekdays_field = {
-        '0': 'Monday',
-        '1': 'Tuesday',
-        '2': 'Wednesday',
-        '3': 'Thursday',
-        '4': 'Friday',
-        '5': 'Saturday',
-        '6': 'Sunday',
-    }
+    therapist = models.ForeignKey(User, on_delete=models.CASCADE)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    is_approved = models.BooleanField(default=False)
 
     @property
     def translate_days(self):
         """ Translates weekday number into word """
-        a = [self.weekdays_field.get(str(day)) for day in self.days]
-        return a
-
-    therapist = models.ForeignKey(User, on_delete=models.CASCADE)
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-
-    @staticmethod
-    def create_slots():
-        for item in Schedule.objects.all():
-            today = datetime.now().weekday()
-            this_week = datetime.now() - timedelta(days=today)
-            for day in range(len(item.days)):
-                sttime = datetime.combine(date=datetime.date(this_week + timedelta(days=int(item.days[day]))),
-                                          time=item.start_time)
-                endtime = datetime.combine(date=datetime.date(this_week + timedelta(days=int(item.days[day]))),
-                                           time=item.end_time)
-                for i in range(4):
-                    Slot.objects.get_or_create(
-                        schedule=item,
-                        therapist=item.therapist,
-                        start_time=utc.localize(sttime + timedelta(weeks=i)),
-                        end_time=utc.localize(endtime + timedelta(weeks=i)),
-                    )
+        return [Schedule.Week.choices[int(item)][1] for item in self.days]
 
     def __str__(self):
         return f'{self.therapist.username}\'s schedule'
+
+    @staticmethod
+    def relative_date(reference, weekday, timevalue):
+        hour, minute = divmod(timevalue, 1)
+        minute *= 60
+        days = reference.weekday() - weekday
+        return (reference - timedelta(days=days)).replace(
+            hour=int(hour), minute=int(minute), second=0, microsecond=0)
+
+    def create_slots(self, weeks=4):
+        slots_list = list()
+        for item in Schedule.objects.filter(is_approved=True):
+            days = list(map(int, item.days))
+            time_from = datetime.now() if not Slot.objects.all() \
+                else Slot.objects.filter(schedule=item).order_by(end_time)[-1].end_time
+            if datetime.now().weekday() < any(days):
+                days[:] = [day for day in days if day < datetime.now().weekday()]
+                for day in days:
+                    weekday_number = day
+                    for week in range(weeks):
+                        slots_list.append(
+                            {
+                                'start_time': self.relative_date(time_from, int(weekday_number),
+                                                                 int(item.start_time.strftime("%H"))),
+                                'end_time': self.relative_date(time_from, int(weekday_number),
+                                                               int(item.end_time.strftime("%H"))),
+                                'therapist': item.therapist,
+                                'schedule': item
+                            }
+                        )
+                        weekday_number += 7
+            else:
+                for day in days:
+                    weekday_number = day + 7
+                    for week in range(weeks - 1):
+                        slots_list.append(
+                            {
+                                'start_time': self.relative_date(time_from, int(weekday_number),
+                                                                 int(item.start_time.strftime("%H"))),
+                                'end_time': self.relative_date(time_from, int(weekday_number),
+                                                               int(item.end_time.strftime("%H"))),
+                                'therapist': item.therapist,
+                                'schedule': item
+                            }
+                        )
+                        weekday_number += 7
+        obj_list = [Slot(**data_dict) for data_dict in slots_list]
+        objs = Slot.objects.bulk_create(obj_list)
 
 
 class Slot(models.Model):
