@@ -15,7 +15,7 @@ git clone https://github.com/firtaltv/massage.git
 3. BUILD AND RUN THE PROJECT:
 sudo docker-compose up --build
 
-4. SIGN UP TO ADMIN PANEL WITH AT:
+4. SIGN UP TO ADMIN PANEL AT:
 
 127.0.0.1:8000/admin
 
