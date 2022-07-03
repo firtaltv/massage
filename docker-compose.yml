@@ -17,7 +17,7 @@ services:
     django:
         build: .
         container_name: django
-        command: /bin/bash -c "exec invoke run_local"
+        command: /bin/bash -c "exec invoke run-local"
         volumes:
             - .:/usr/src/app
         ports:

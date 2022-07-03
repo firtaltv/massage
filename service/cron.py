@@ -1,5 +1,5 @@
 from datetime import datetime
-from .models import Massage
+from .models import Massage, Schedule as Sch
 from django_cron import CronJobBase, Schedule
 import pytz
 
@@ -26,3 +26,15 @@ class SetStatusJob(CronJobBase):
         Massage.objects.exclude(status=Massage.Status.DONE).filter(
             end_time__lte=utc.localize(datetime.now())
         ).update(status=Massage.Status.DONE)
+
+
+class AddSlotsWeekly(CronJobBase):
+    """
+    Add Slots weekly
+    """
+    RUN_ON_DAY = (0, )
+    schedule = Schedule(run_on_days=RUN_ON_DAY)
+    code = "service.cron.AddSlotsWeekly"
+
+    def do(self):
+        Sch.create_slots()
